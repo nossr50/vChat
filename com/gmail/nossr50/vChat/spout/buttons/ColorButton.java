@@ -10,7 +10,7 @@ public class ColorButton extends GenericButton
 	public ColorButton(ChatColor x)
 	{
 		selectedColor = x;
-		this.setHeight(20).setWidth(80);
+		this.setHeight(20).setWidth(75);
 		this.setText(selectedColor.name());
 		this.setDirty(true);
 	}

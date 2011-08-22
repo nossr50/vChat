@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
-
 import com.gmail.nossr50.vChat.vChat;
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
 import com.gmail.nossr50.vChat.spout.buttons.ColorButton;
@@ -51,7 +50,38 @@ public class CustomizationScreen extends GenericPopup
 		for(ChatColor x : ChatColor.values())
 		{
 			ColorButton y = new ColorButton(x);
+			//y.setAnchor(WidgetAnchor.TOP_LEFT);
+			y.setDirty(true);
 			colorButtons.add(y);
+		}
+		
+		int offset = 26;
+		int count = 0;
+		int pos_x = offset, pos_y = 240-20;
+		
+		for(ColorButton x : colorButtons)
+		{
+			if(count == 15)
+			{
+				x.setX(176).setY(pos_y-x.getHeight());
+			} 
+			else 
+			{
+				if(pos_x+x.getWidth() < (center_x*2))
+				{
+					x.setX(pos_x).setY(pos_y);
+				} else {
+					pos_y -= x.getHeight();
+					pos_x = offset;
+					
+					x.setX(pos_x).setY(pos_y);
+				}
+				
+				pos_x+=x.getWidth();
+			}
+			
+			count++;
+			this.attachWidget(plugin, x);
 		}
 		
 		prefixField = new ChatField(TextType.PREFIX);

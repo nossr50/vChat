@@ -110,7 +110,6 @@ public class screenListener extends ScreenListener
 			} 
 			else 
 			{
-				System.out.println("Trimming Built Text");
 				if(PD.getBuiltStringSize(cf.getTextType()) > 3)
 				{
 					PD.trimBuiltString(cf.getTextType(), 0, cf.getText().length());
