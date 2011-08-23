@@ -5,11 +5,14 @@ import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
 import org.getspout.spoutapi.event.screen.ScreenListener;
 import org.getspout.spoutapi.event.screen.TextFieldChangeEvent;
+import org.getspout.spoutapi.gui.Button;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.gmail.nossr50.vChat.vChat;
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
 import com.gmail.nossr50.vChat.spout.buttons.ColorButton;
+import com.gmail.nossr50.vChat.spout.buttons.EasyColor;
+import com.gmail.nossr50.vChat.spout.buttons.EasyDefault;
 import com.gmail.nossr50.vChat.spout.buttons.SetButton;
 import com.gmail.nossr50.vChat.spout.screens.CustomizationScreen;
 import com.gmail.nossr50.vChat.spout.textfields.ChatField;
@@ -30,18 +33,29 @@ public class screenListener extends ScreenListener
 		if(vSpout.playerScreens.get(sPlayer) != null)
 		{
 			CustomizationScreen screen = vSpout.playerScreens.get(sPlayer);
-			
-			if(event.getButton() instanceof SetButton)
+			Button button = event.getButton();
+			if(button instanceof SetButton)
 			{
 				screen.updatePlayerData(sPlayer);
 				sPlayer.getMainScreen().closePopup();
 				sPlayer.sendMessage(ChatColor.GOLD+"[vChat]"+ChatColor.GREEN+" Display name set to "+PD.getPrefix()+ChatColor.WHITE+PD.getNickname()+ChatColor.WHITE+PD.getSuffix());
 				String broadcast = ChatColor.GOLD+"[vChat] "+ChatColor.RED+sPlayer.getName()+ChatColor.GREEN+" has changed their display name to "+PD.getPrefix()+ChatColor.WHITE+PD.getNickname()+ChatColor.WHITE+PD.getSuffix();
 				Misc.broadcast(broadcast, sPlayer);
-			} else if (event.getButton() instanceof ColorButton)
+			} else if (button instanceof ColorButton)
 			{
 				ColorButton cb = (ColorButton)event.getButton();
 				screen.setSelectedColor(cb.getChatColor());
+			} else if (button instanceof EasyColor)
+			{
+				EasyColor easyColor = (EasyColor)button;
+				PD.easyColor(easyColor.getTextType(), screen.getTextField(easyColor.getTextType()), screen.getColor());
+				screen.setPreviewLabelUpdated(false);
+			} else if (button instanceof EasyDefault)
+			{
+				EasyDefault easyDefault = (EasyDefault)button;
+				PD.clearBuiltString(easyDefault.getTextType());
+				screen.getTextField(easyDefault.getTextType()).setText("").setDirty(true);
+				screen.setPreviewLabelUpdated(false);
 			}
 		}
 	}

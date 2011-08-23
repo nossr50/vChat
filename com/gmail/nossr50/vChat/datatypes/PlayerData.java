@@ -2,6 +2,7 @@ package com.gmail.nossr50.vChat.datatypes;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.getspout.spoutapi.gui.TextField;
 
 import com.gmail.nossr50.vChat.spout.textfields.ChatField;
 import com.gmail.nossr50.vChat.spout.textfields.TextType;
@@ -11,7 +12,6 @@ public class PlayerData
 	String prefix, suffix, nickname, str_prefix, str_nickname, str_suffix;
 	ChatColor defaultColor = ChatColor.WHITE;
 	long lastTypedTime;
-	boolean isChanging = false;
 	
 	public PlayerData(Player player)
 	{
@@ -33,17 +33,6 @@ public class PlayerData
 	{
 		lastTypedTime = x;
 	}
-	
-	public boolean isChanging()
-	{
-		return isChanging;
-	}
-	
-	public void toggleIsChanging()
-	{
-		isChanging = !isChanging;
-	}
-	
 	public void clearBuiltPrefix()
 	{
 		str_prefix="";
@@ -199,6 +188,34 @@ public class PlayerData
 			break;
 		case SUFFIX:
 			str_suffix = "";
+			break;
+		}
+	}
+	public void easyColor(TextType type, TextField field, ChatColor color)
+	{
+		String newText = "";
+		switch(type)
+		{
+		case PREFIX:
+			for(char x : field.getText().toCharArray())
+			{
+				newText+=color+String.valueOf(x);
+			}
+			str_prefix = newText;
+			break;
+		case NICKNAME:
+			for(char x : field.getText().toCharArray())
+			{
+				newText+=color+String.valueOf(x);
+			}
+			str_nickname = newText;
+			break;
+		case SUFFIX:
+			for(char x : field.getText().toCharArray())
+			{
+				newText+=color+String.valueOf(x);
+			}
+			str_suffix = newText;
 			break;
 		}
 	}

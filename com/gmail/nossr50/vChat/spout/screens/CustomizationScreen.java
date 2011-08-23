@@ -6,9 +6,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
+import org.getspout.spoutapi.gui.TextField;
+
 import com.gmail.nossr50.vChat.vChat;
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
 import com.gmail.nossr50.vChat.spout.buttons.ColorButton;
+import com.gmail.nossr50.vChat.spout.buttons.EasyColor;
+import com.gmail.nossr50.vChat.spout.buttons.EasyDefault;
 import com.gmail.nossr50.vChat.spout.buttons.SetButton;
 import com.gmail.nossr50.vChat.spout.textfields.ChatField;
 import com.gmail.nossr50.vChat.spout.textfields.TextType;
@@ -21,6 +25,7 @@ public class CustomizationScreen extends GenericPopup
 	int center_x = 427/2;
 	int center_y = 240/2;
 	int spacing = 10;
+	int small_spacing = 1;
 	int limit_prefix = 6;
 	int limit_suffix = 6;
 	int limit_nickname = 12;
@@ -30,6 +35,14 @@ public class CustomizationScreen extends GenericPopup
 	ChatField prefixField = null;
 	ChatField suffixField = null;
 	ChatField nickNameField = null;
+	
+	EasyColor color_prefix = new EasyColor(TextType.PREFIX);
+	EasyColor color_nickname = new EasyColor(TextType.NICKNAME);
+	EasyColor color_suffix = new EasyColor(TextType.SUFFIX);
+
+	EasyDefault default_prefix = new EasyDefault(TextType.PREFIX);
+	EasyDefault default_nickname = new EasyDefault(TextType.NICKNAME);
+	EasyDefault default_suffix = new EasyDefault(TextType.SUFFIX);
 	
 	ChatColor selectedColor = ChatColor.WHITE;
 	
@@ -93,18 +106,25 @@ public class CustomizationScreen extends GenericPopup
 		label_menu.setText(ChatColor.GREEN+"vChat Name Customization Menu (ALPHA)").setX(0).setY(0).setDirty(true);
 		
 		//nickname = center
-		nickNameField.setX((center_x-(nickNameField.getWidth()/2))).setY(center_y/2).setDirty(true);
+		default_nickname.setX(center_x-(nickNameField.getWidth()/2)-default_nickname.getWidth()-3).setY(center_y/2-default_nickname.getHeight()-small_spacing).setDirty(true);
+		nickNameField.setX(center_x-(nickNameField.getWidth()/2)).setY(center_y/2).setDirty(true);
 		label_preview_nickname.setX(nickNameField.getX()).setY(nickNameField.getY()+nickNameField.getHeight()+(spacing/2)).setDirty(true);
 		label_nickname.setText(ChatColor.GOLD+"Nickname").setX(nickNameField.getX()).setY(nickNameField.getY()-spacing).setDirty(true);
+		color_nickname.setX(center_x-(nickNameField.getWidth()/2)-color_nickname.getWidth()-3).setY(nickNameField.getY()+small_spacing).setDirty(true);
 		
 		//prefix = left
-		prefixField.setX(nickNameField.getX()-prefixField.getWidth()-spacing).setY(center_y/2).setDirty(true);
+		prefixField.setX(default_nickname.getX()-prefixField.getWidth()-spacing).setY(center_y/2).setDirty(true);
 		label_preview_prefix.setX(prefixField.getX()).setY(prefixField.getY()+prefixField.getHeight()+(spacing/2)).setDirty(true);
 		label_prefix.setText(ChatColor.GOLD+"Prefix").setX(prefixField.getX()).setY(prefixField.getY()-spacing).setDirty(true);
+		color_prefix.setX(prefixField.getX()-color_prefix.getWidth()-3).setY(prefixField.getY()+small_spacing).setDirty(true);
+		default_prefix.setX(prefixField.getX()-default_prefix.getWidth()-3).setY(center_y/2-default_prefix.getHeight()-small_spacing).setDirty(true);
+		
 		//suffix = right
-		suffixField.setX(nickNameField.getX()+nickNameField.getWidth()+spacing).setY(center_y/2).setDirty(true);
-		label_preview_suffix.setX(suffixField.getX()).setY(suffixField.getY()+suffixField.getHeight()+(spacing/2)).setDirty(true);
+		suffixField.setX(nickNameField.getX()+nickNameField.getWidth()+default_suffix.getWidth()+spacing).setY(center_y/2).setDirty(true);
+		label_preview_suffix.setX(suffixField.getX()+3).setY(suffixField.getY()+suffixField.getHeight()+(spacing/2)).setDirty(true);
 		label_suffix.setText(ChatColor.GOLD+"Suffix").setX(suffixField.getX()).setY(suffixField.getY()-spacing).setDirty(true);
+		color_suffix.setX(suffixField.getX()-color_suffix.getWidth()-3).setY(suffixField.getY()+small_spacing).setDirty(true);
+		default_suffix.setX(suffixField.getX()-default_suffix.getWidth()-3).setY(center_y/2-default_suffix.getHeight()-small_spacing).setDirty(true);
 		
 		setButton.setX(center_x-(setButton.getWidth()/2)).setY(nickNameField.getY()+spacing+setButton.getHeight()).setDirty(true);		
 		
@@ -112,7 +132,6 @@ public class CustomizationScreen extends GenericPopup
 		this.attachWidget(plugin, nickNameField);
 		this.attachWidget(plugin, suffixField);
 		this.attachWidget(plugin, setButton);
-		//this.attachWidget(plugin, colorButton);
 		this.attachWidget(plugin, label_menu);
 		this.attachWidget(plugin, label_prefix);
 		this.attachWidget(plugin, label_nickname);
@@ -120,6 +139,12 @@ public class CustomizationScreen extends GenericPopup
 		this.attachWidget(plugin, label_preview_prefix);
 		this.attachWidget(plugin, label_preview_nickname);
 		this.attachWidget(plugin, label_preview_suffix);
+		this.attachWidget(plugin, color_nickname);
+		this.attachWidget(plugin, default_nickname);
+		this.attachWidget(plugin, color_prefix);
+		this.attachWidget(plugin, default_prefix);
+		this.attachWidget(plugin, color_suffix);
+		this.attachWidget(plugin, default_suffix);
 		
 		this.setDirty(true);
 	}
@@ -257,5 +282,19 @@ public class CustomizationScreen extends GenericPopup
 			}
 		}
 		this.setDirty(true);
+	}
+	public TextField getTextField(TextType type)
+	{
+		switch(type)
+		{
+		case PREFIX:
+			return prefixField;
+		case NICKNAME:
+			return nickNameField;
+		case SUFFIX:
+			return suffixField;
+		default:
+			return null;
+		}
 	}
 }

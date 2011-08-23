@@ -11,7 +11,7 @@ public class ColorButton extends GenericButton
 	{
 		selectedColor = x;
 		this.setHeight(20).setWidth(75);
-		this.setText(selectedColor.name());
+		this.setText(selectedColor+selectedColor.name());
 		this.setDirty(true);
 	}
 	
