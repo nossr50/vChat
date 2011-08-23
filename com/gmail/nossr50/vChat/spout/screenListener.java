@@ -1,5 +1,6 @@
 package com.gmail.nossr50.vChat.spout;
 
+import org.bukkit.ChatColor;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
 import org.getspout.spoutapi.event.screen.ScreenListener;
@@ -12,6 +13,7 @@ import com.gmail.nossr50.vChat.spout.buttons.ColorButton;
 import com.gmail.nossr50.vChat.spout.buttons.SetButton;
 import com.gmail.nossr50.vChat.spout.screens.CustomizationScreen;
 import com.gmail.nossr50.vChat.spout.textfields.ChatField;
+import com.gmail.nossr50.vChat.util.Misc;
 
 public class screenListener extends ScreenListener
 {
@@ -23,6 +25,7 @@ public class screenListener extends ScreenListener
 	public void onButtonClick(ButtonClickEvent event) 
 	{
 		SpoutPlayer sPlayer = event.getPlayer();
+		PlayerData PD = plugin.playerData.get(sPlayer);
 		
 		if(vSpout.playerScreens.get(sPlayer) != null)
 		{
@@ -31,6 +34,10 @@ public class screenListener extends ScreenListener
 			if(event.getButton() instanceof SetButton)
 			{
 				screen.updatePlayerData(sPlayer);
+				sPlayer.getMainScreen().closePopup();
+				sPlayer.sendMessage(ChatColor.GOLD+"[vChat]"+ChatColor.GREEN+" Display name set to "+PD.getPrefix()+ChatColor.WHITE+PD.getNickname()+ChatColor.WHITE+PD.getSuffix());
+				String broadcast = ChatColor.GOLD+"[vChat] "+ChatColor.RED+sPlayer.getName()+ChatColor.GREEN+" has changed their display name to "+PD.getPrefix()+ChatColor.WHITE+PD.getNickname()+ChatColor.WHITE+PD.getSuffix();
+				Misc.broadcast(broadcast, sPlayer);
 			} else if (event.getButton() instanceof ColorButton)
 			{
 				ColorButton cb = (ColorButton)event.getButton();
@@ -80,39 +87,22 @@ public class screenListener extends ScreenListener
 			CustomizationScreen screen = vSpout.playerScreens.get(sPlayer);
 			PlayerData PD = plugin.playerData.get(sPlayer);
 			
-			if(event.getNewText().length() == 0)
-			{
-				switch(cf.getTextType())
-				{
-				case PREFIX:
-					PD.clearBuiltPrefix();
-					break;
-				case NICKNAME:
-					PD.clearBuiltNickname();
-					break;
-				case SUFFIX:
-					PD.clearBuiltSuffix();
-					break;
-				}
-				
-			}
-			
 			if(event.getNewText().length() > event.getOldText().length())
 			{
 				if(vSpout.playerScreens.get(sPlayer) != null)
 				{
 					String newtext = event.getNewText();
-						
-					char[] split = newtext.toCharArray();
-						
-					buildString(String.valueOf(split[split.length-1]), cf, sPlayer, screen);
+					
+					String newChars =  newtext.substring(event.getOldText().length());
+					
+					buildString(newChars, cf, sPlayer, screen);
 				}
-			} 
+			}
 			else 
 			{
 				if(PD.getBuiltStringSize(cf.getTextType()) > 3)
 				{
-					PD.trimBuiltString(cf.getTextType(), 0, cf.getText().length());
+					PD.trimBuiltString(cf.getTextType(), 0, cf);
 				} 
 				else
 				{

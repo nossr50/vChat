@@ -24,7 +24,7 @@ public class UpdatePreviews implements Runnable {
 				CustomizationScreen screen = (CustomizationScreen)sPlayer.getMainScreen().getActivePopup();
 				PlayerData PD = plugin.playerData.get(sPlayer);
 				
-				if(!screen.hasPreviewLabelUpdated() && System.currentTimeMillis() - 300 >= PD.getLastTypedTime())
+				if(!screen.hasPreviewLabelUpdated() && System.currentTimeMillis() - 500 >= PD.getLastTypedTime())
 				{
 					screen.updatePreviewLabels(PD);
 				}

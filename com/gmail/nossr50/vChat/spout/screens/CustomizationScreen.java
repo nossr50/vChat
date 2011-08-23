@@ -21,6 +21,9 @@ public class CustomizationScreen extends GenericPopup
 	int center_x = 427/2;
 	int center_y = 240/2;
 	int spacing = 10;
+	int limit_prefix = 6;
+	int limit_suffix = 6;
+	int limit_nickname = 12;
 	
 	boolean previewLabelUpdated = true;
 	
@@ -50,7 +53,6 @@ public class CustomizationScreen extends GenericPopup
 		for(ChatColor x : ChatColor.values())
 		{
 			ColorButton y = new ColorButton(x);
-			//y.setAnchor(WidgetAnchor.TOP_LEFT);
 			y.setDirty(true);
 			colorButtons.add(y);
 		}
@@ -92,21 +94,19 @@ public class CustomizationScreen extends GenericPopup
 		
 		//nickname = center
 		nickNameField.setX((center_x-(nickNameField.getWidth()/2))).setY(center_y/2).setDirty(true);
-		label_preview_nickname.setX(nickNameField.getX()).setY(nickNameField.getY()+nickNameField.getHeight()).setDirty(true);
+		label_preview_nickname.setX(nickNameField.getX()).setY(nickNameField.getY()+nickNameField.getHeight()+(spacing/2)).setDirty(true);
 		label_nickname.setText(ChatColor.GOLD+"Nickname").setX(nickNameField.getX()).setY(nickNameField.getY()-spacing).setDirty(true);
 		
 		//prefix = left
 		prefixField.setX(nickNameField.getX()-prefixField.getWidth()-spacing).setY(center_y/2).setDirty(true);
-		label_preview_prefix.setX(prefixField.getX()).setY(prefixField.getY()+prefixField.getHeight()).setDirty(true);
+		label_preview_prefix.setX(prefixField.getX()).setY(prefixField.getY()+prefixField.getHeight()+(spacing/2)).setDirty(true);
 		label_prefix.setText(ChatColor.GOLD+"Prefix").setX(prefixField.getX()).setY(prefixField.getY()-spacing).setDirty(true);
 		//suffix = right
 		suffixField.setX(nickNameField.getX()+nickNameField.getWidth()+spacing).setY(center_y/2).setDirty(true);
-		label_preview_suffix.setX(suffixField.getX()).setY(suffixField.getY()+suffixField.getY()).setDirty(true);
+		label_preview_suffix.setX(suffixField.getX()).setY(suffixField.getY()+suffixField.getHeight()+(spacing/2)).setDirty(true);
 		label_suffix.setText(ChatColor.GOLD+"Suffix").setX(suffixField.getX()).setY(suffixField.getY()-spacing).setDirty(true);
 		
-		setButton.setX(center_x-(setButton.getWidth()/2)).setY(nickNameField.getY()+spacing+setButton.getHeight()).setDirty(true);
-		//colorButton.setX(center_x-(colorButton.getWidth()/2)).setY(label_nickname.getY()-spacing-colorButton.getHeight()).setDirty(true);
-		
+		setButton.setX(center_x-(setButton.getWidth()/2)).setY(nickNameField.getY()+spacing+setButton.getHeight()).setDirty(true);		
 		
 		this.attachWidget(plugin, prefixField);
 		this.attachWidget(plugin, nickNameField);
@@ -215,27 +215,47 @@ public class CustomizationScreen extends GenericPopup
 	}
 	public void updatePlayerData(Player player)
 	{
+		String format = ChatColor.GOLD+"[vChat] "+ChatColor.RED;
 		PlayerData PD = plugin.playerData.get(player);
 		
-		if(PD.getBuiltNickname().length() >= 1)
+		if(PD.getBuiltNickname().length() >= 3 )
 		{
-			PD.setNickname(PD.getBuiltNickname());
-			PD.clearBuiltNickname();
-			nickNameField.setText("").setDirty(true);
-		}
-		if(PD.getBuiltPrefix().length() >= 1)
-		{
-			PD.setPrefix(PD.getBuiltPrefix());
-			PD.clearBuiltPrefix();
-			prefixField.setText("").setDirty(true);
-		}
-		if(PD.getBuiltSuffix().length() >= 1)
-		{
-			PD.setSuffix(PD.getBuiltSuffix());
-			PD.clearBuiltSuffix();
-			suffixField.setText("").setDirty(true);
+			if(player.isOp() && nickNameField.getText().length() <= limit_nickname)
+			{
+				PD.setNickname(PD.getBuiltNickname());
+				PD.clearBuiltNickname();
+				nickNameField.setText("").setDirty(true);
+			} else if (!player.isOp())
+			{
+				player.sendMessage(format+"Changing the nickname field is currently restricted to Ops");
+			} else {
+				player.sendMessage(format+"nicknames can only consist of "+limit_nickname+" or less characters");
+			}
 		}
 		
+		if(PD.getBuiltPrefix().length() >= 3)
+		{
+			if(prefixField.getText().length() <= limit_prefix)
+			{
+				PD.setPrefix(PD.getBuiltPrefix());
+				PD.clearBuiltPrefix();
+				prefixField.setText("").setDirty(true);
+			} else if (prefixField.getText().length() > limit_prefix){
+				player.sendMessage(format+"prefixes can only consist of "+limit_prefix+" or less characters");
+			}
+		}
+		
+		if(PD.getBuiltSuffix().length() >= 3)
+		{
+			if(suffixField.getText().length() <= limit_suffix)
+			{
+				PD.setSuffix(PD.getBuiltSuffix());
+				PD.clearBuiltSuffix();
+				suffixField.setText("").setDirty(true);
+			} else if (suffixField.getText().length() <= limit_suffix){
+				player.sendMessage(format+"suffixes can only consist of "+limit_suffix+" or less characters");
+			}
+		}
 		this.setDirty(true);
 	}
 }

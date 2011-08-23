@@ -3,6 +3,7 @@ package com.gmail.nossr50.vChat.datatypes;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import com.gmail.nossr50.vChat.spout.textfields.ChatField;
 import com.gmail.nossr50.vChat.spout.textfields.TextType;
 
 public class PlayerData 
@@ -149,23 +150,25 @@ public class PlayerData
 		clearBuiltPrefix();
 		clearBuiltSuffix();
 	}
-	public void trimBuiltString(TextType type, int start, int length)
+	public void trimBuiltString(TextType type, int start, ChatField cf)
 	{
+		int maxsize = (cf.getText().length()*3)-3;
+		
 		switch(type)
 		{
 		case PREFIX:
 		{
-			str_prefix = str_prefix.substring(start, (length*3)-3);
+			str_prefix = str_prefix.substring(start, maxsize);
 		}
 		break;
 		case NICKNAME:
 		{
-			str_nickname = str_nickname.substring(start, (length*3)-3);
+			str_nickname = str_nickname.substring(start, maxsize);
 		}
 		break;
 		case SUFFIX:
 		{
-			str_suffix = str_suffix.substring(start, (length*3)-3);
+			str_suffix = str_suffix.substring(start, maxsize);
 		}
 		break;
 		}

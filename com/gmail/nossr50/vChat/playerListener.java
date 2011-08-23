@@ -31,6 +31,9 @@ public class playerListener extends PlayerListener
 			player.setDisplayName(PD.getPrefix()+ChatColor.WHITE+""+PD.getNickname()+ChatColor.WHITE+""+PD.getSuffix());
 		}
 		
+		if(msg.length() >= 1 && msg.startsWith(">"))
+			msg=ChatColor.GREEN+msg;
+		
 		event.setFormat("<" + player.getDisplayName() + ChatColor.WHITE + "> " + msg);
 	}
 	
