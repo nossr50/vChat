@@ -11,9 +11,12 @@ import org.getspout.spoutapi.gui.TextField;
 import com.gmail.nossr50.vChat.vChat;
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
 import com.gmail.nossr50.vChat.spout.buttons.ColorButton;
+import com.gmail.nossr50.vChat.spout.buttons.DefaultsButton;
 import com.gmail.nossr50.vChat.spout.buttons.EasyColor;
 import com.gmail.nossr50.vChat.spout.buttons.EasyDefault;
+import com.gmail.nossr50.vChat.spout.buttons.EscapeButton;
 import com.gmail.nossr50.vChat.spout.buttons.SetButton;
+import com.gmail.nossr50.vChat.spout.buttons.TextColorButton;
 import com.gmail.nossr50.vChat.spout.textfields.ChatField;
 import com.gmail.nossr50.vChat.spout.textfields.TextType;
 
@@ -58,10 +61,14 @@ public class CustomizationScreen extends GenericPopup
 	ArrayList<ColorButton> colorButtons = new ArrayList<ColorButton>();
 	
 	SetButton setButton = new SetButton();
+	EscapeButton escapeButton = new EscapeButton();
+	TextColorButton textColorButton = null;
+	DefaultsButton defaultsButton = new DefaultsButton();
 	
 	public CustomizationScreen(PlayerData PD, vChat pluginx)
 	{
 		plugin = pluginx;
+		textColorButton = new TextColorButton(PD);
 		
 		for(ChatColor x : ChatColor.values())
 		{
@@ -127,6 +134,9 @@ public class CustomizationScreen extends GenericPopup
 		default_suffix.setX(suffixField.getX()-default_suffix.getWidth()-3).setY(center_y/2-default_suffix.getHeight()-small_spacing).setDirty(true);
 		
 		setButton.setX(center_x-(setButton.getWidth()/2)).setY(nickNameField.getY()+spacing+setButton.getHeight()).setDirty(true);		
+		escapeButton.setX(setButton.getX()+escapeButton.getWidth()).setY(setButton.getY()).setDirty(true);
+		defaultsButton.setX(setButton.getX()-defaultsButton.getWidth()).setY(setButton.getY()).setDirty(true);
+		textColorButton.setX(defaultsButton.getX()).setY(defaultsButton.getY()+textColorButton.getHeight()).setDirty(true);
 		
 		this.attachWidget(plugin, prefixField);
 		this.attachWidget(plugin, nickNameField);
@@ -145,6 +155,9 @@ public class CustomizationScreen extends GenericPopup
 		this.attachWidget(plugin, default_prefix);
 		this.attachWidget(plugin, color_suffix);
 		this.attachWidget(plugin, default_suffix);
+		this.attachWidget(plugin, escapeButton);
+		this.attachWidget(plugin, defaultsButton);
+		this.attachWidget(plugin, textColorButton);
 		
 		this.setDirty(true);
 	}
@@ -281,6 +294,8 @@ public class CustomizationScreen extends GenericPopup
 				player.sendMessage(format+"suffixes can only consist of "+limit_suffix+" or less characters");
 			}
 		}
+		
+		PD.setDefaultColor(textColorButton.getSelectedColor());
 		this.setDirty(true);
 	}
 	public TextField getTextField(TextType type)

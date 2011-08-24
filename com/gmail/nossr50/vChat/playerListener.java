@@ -23,18 +23,18 @@ public class playerListener extends PlayerListener
 	public void onPlayerChat(PlayerChatEvent event) 
 	{
 		Player player = event.getPlayer();
+		PlayerData PD = plugin.playerData.get(player);
 		String msg = event.getMessage();
 		
-		if(plugin.playerData.containsKey(player))
+		if(PD != null)
 		{
-			PlayerData PD = plugin.playerData.get(player);
 			player.setDisplayName(PD.getPrefix()+ChatColor.WHITE+""+PD.getNickname()+ChatColor.WHITE+""+PD.getSuffix());
+			
+			if(msg.length() >= 1 && msg.startsWith(">"))
+				msg=ChatColor.GREEN+msg;
+			
+			event.setFormat("<" + player.getDisplayName() + ChatColor.WHITE + "> " + PD.getDefaultColor() + msg);
 		}
-		
-		if(msg.length() >= 1 && msg.startsWith(">"))
-			msg=ChatColor.GREEN+msg;
-		
-		event.setFormat("<" + player.getDisplayName() + ChatColor.WHITE + "> " + msg);
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) 

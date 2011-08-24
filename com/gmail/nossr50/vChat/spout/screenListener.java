@@ -11,11 +11,15 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import com.gmail.nossr50.vChat.vChat;
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
 import com.gmail.nossr50.vChat.spout.buttons.ColorButton;
+import com.gmail.nossr50.vChat.spout.buttons.DefaultsButton;
 import com.gmail.nossr50.vChat.spout.buttons.EasyColor;
 import com.gmail.nossr50.vChat.spout.buttons.EasyDefault;
+import com.gmail.nossr50.vChat.spout.buttons.EscapeButton;
 import com.gmail.nossr50.vChat.spout.buttons.SetButton;
+import com.gmail.nossr50.vChat.spout.buttons.TextColorButton;
 import com.gmail.nossr50.vChat.spout.screens.CustomizationScreen;
 import com.gmail.nossr50.vChat.spout.textfields.ChatField;
+import com.gmail.nossr50.vChat.spout.textfields.TextType;
 import com.gmail.nossr50.vChat.util.Misc;
 
 public class screenListener extends ScreenListener
@@ -29,6 +33,7 @@ public class screenListener extends ScreenListener
 	{
 		SpoutPlayer sPlayer = event.getPlayer();
 		PlayerData PD = plugin.playerData.get(sPlayer);
+		String format = ChatColor.GOLD+"[vChat] "+ChatColor.GREEN;
 		
 		if(vSpout.playerScreens.get(sPlayer) != null)
 		{
@@ -36,11 +41,21 @@ public class screenListener extends ScreenListener
 			Button button = event.getButton();
 			if(button instanceof SetButton)
 			{
+				String before[] = {PD.getPrefix(), PD.getNickname(), PD.getSuffix(), PD.getDefaultColor().name()};
+				
 				screen.updatePlayerData(sPlayer);
 				sPlayer.getMainScreen().closePopup();
-				sPlayer.sendMessage(ChatColor.GOLD+"[vChat]"+ChatColor.GREEN+" Display name set to "+PD.getPrefix()+ChatColor.WHITE+PD.getNickname()+ChatColor.WHITE+PD.getSuffix());
-				String broadcast = ChatColor.GOLD+"[vChat] "+ChatColor.RED+sPlayer.getName()+ChatColor.GREEN+" has changed their display name to "+PD.getPrefix()+ChatColor.WHITE+PD.getNickname()+ChatColor.WHITE+PD.getSuffix();
-				Misc.broadcast(broadcast, sPlayer);
+				
+				if(!before[0].equals(PD.getPrefix()) || !before[1].equals(PD.getNickname()) || !before[2].equals(PD.getSuffix()))
+				{
+					sPlayer.sendMessage(format+ChatColor.GREEN+"Display name set to "+PD.getPrefix()+ChatColor.WHITE+PD.getNickname()+ChatColor.WHITE+PD.getSuffix());
+					String broadcast = format+ChatColor.RED+sPlayer.getName()+ChatColor.GREEN+" has changed their display name to "+PD.getPrefix()+ChatColor.WHITE+PD.getNickname()+ChatColor.WHITE+PD.getSuffix();
+					Misc.broadcast(broadcast, sPlayer);
+				}
+				if (!before[3].equals(PD.getDefaultColor().name()))
+				{
+					sPlayer.sendMessage(format+"default chat color set to "+PD.getDefaultColor()+PD.getDefaultColor().name());
+				}
 			} else if (button instanceof ColorButton)
 			{
 				ColorButton cb = (ColorButton)event.getButton();
@@ -56,6 +71,28 @@ public class screenListener extends ScreenListener
 				PD.clearBuiltString(easyDefault.getTextType());
 				screen.getTextField(easyDefault.getTextType()).setText("").setDirty(true);
 				screen.setPreviewLabelUpdated(false);
+			} else if (button instanceof DefaultsButton)
+			{
+				PD.setDefaultColor(ChatColor.WHITE);
+				PD.clearBuiltNickname();
+				PD.clearBuiltPrefix();
+				PD.clearBuiltSuffix();
+				PD.setPrefix("");
+				PD.setSuffix("");
+				PD.setNickname(sPlayer.getName());
+				screen.getTextField(TextType.PREFIX).setText("").setDirty(true);
+				screen.getTextField(TextType.NICKNAME).setText("").setDirty(true);
+				screen.getTextField(TextType.SUFFIX).setText("").setDirty(true);
+				sPlayer.getMainScreen().closePopup();
+				sPlayer.sendMessage(format+ChatColor.RED+"all data has been wiped, you horrible person!");
+			} else if (button instanceof TextColorButton)
+			{
+				TextColorButton textColorButton = (TextColorButton)button;
+				textColorButton.SetSelectedColor(screen.getColor());
+				screen.setPreviewLabelUpdated(false);
+			} else if (button instanceof EscapeButton)
+			{
+				sPlayer.getMainScreen().closePopup();
 			}
 		}
 	}

@@ -11,6 +11,7 @@ public class EasyColor extends GenericButton
 	{
 		type = x;
 		this.setText("C");
+		this.setTooltip("Color");
 		this.setWidth(14);
 		this.setHeight(11);
 		this.setDirty(true);

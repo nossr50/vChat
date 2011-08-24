@@ -11,6 +11,7 @@ public class EasyDefault extends GenericButton
 	{
 		type = x;
 		this.setText("D");
+		this.setTooltip("Default");
 		this.setWidth(14);
 		this.setHeight(11);
 		this.setDirty(true);
