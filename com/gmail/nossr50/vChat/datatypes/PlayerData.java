@@ -1,5 +1,12 @@
 package com.gmail.nossr50.vChat.datatypes;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.gui.TextField;
@@ -9,12 +16,17 @@ import com.gmail.nossr50.vChat.spout.textfields.TextType;
 
 public class PlayerData 
 {
-	String prefix, suffix, nickname, str_prefix, str_nickname, str_suffix;
+	String prefix, suffix, nickname, str_prefix, str_nickname, str_suffix, playerName;
+	
+	String vChatDir = "plugins" + File.separator + "vChat";
+	String vChatUserFile = vChatDir + File.separator + "vChat.users";
+	
 	ChatColor defaultColor = ChatColor.WHITE;
 	long lastTypedTime;
 	
 	public PlayerData(Player player)
 	{
+		playerName = player.getName();
 		nickname = player.getDisplayName();
 		prefix = "";
 		suffix = "";
@@ -22,6 +34,101 @@ public class PlayerData
 		str_prefix="";
 		str_nickname="";
 		str_suffix="";
+		
+		if(!load(player))
+			addPlayer(player);
+	}
+	
+	private void addPlayer(Player player)
+	{
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(vChatUserFile)));
+			bw.append(player.getName()+":");
+			bw.append(""+":");
+			bw.append(player.getName()+":");
+			bw.append(""+":");
+			bw.append(""+":");
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean load(Player player)
+	{
+		File users = new File(vChatUserFile);
+		try {
+			//Setup the write/reader stuff
+			BufferedReader reader = new BufferedReader(new FileReader(users));
+			String line = "";
+			//Actually do stuff when reading from it
+			while((line = reader.readLine()) != null)
+			{
+				//PlayerName:Prefix:Nickname:Suffix:DefaultColor
+				
+				String split[] = line.split(":");
+				
+				if(!split[0].equals(player.getName()))
+					continue;
+				
+				if(split.length >= 2 && split[1].length() >= 1)
+					prefix = split[1];
+				if(split.length >= 3 && split[2].length() >= 1)
+					nickname = split[2];
+				if(split.length >= 4 && split[3].length() >= 1)
+					suffix = split[3];
+				if(split.length >= 5 && split[4].length() >= 1)
+					for(ChatColor x : ChatColor.values())
+					{
+						if(x.name().equals(split[4]))
+						{
+							defaultColor = x;
+							break;
+						}
+					}
+				reader.close(); //Close
+				return true;
+			}
+			return false;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public void save()
+	{
+		File users = new File(vChatUserFile);
+		try {
+			//Setup the write/reader stuff
+			BufferedReader reader = new BufferedReader(new FileReader(users));
+			StringBuilder writer = new StringBuilder();
+			
+			//Actually do stuff when reading from it
+			String line = "";
+			while((line = reader.readLine()) != null)
+			{
+				//PlayerName:Prefix:Nickname:Suffix:DefaultColor
+				String split[] = line.split(":");
+				if(!split[0].equals(playerName))
+				{
+					writer.append(line).append("/r/n");
+				} else {
+				String x = ":";
+				String replacement = playerName+x+prefix+x+nickname+x+suffix+x+defaultColor.name()+x;
+				writer.append(replacement+"\r\n");
+				System.out.println("Saving!");
+				}
+			}
+			reader.close(); //Close
+			FileWriter out = new FileWriter(vChatUserFile);
+			out.write(writer.toString());
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public long getLastTypedTime()

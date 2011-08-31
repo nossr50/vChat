@@ -1,5 +1,8 @@
 package com.gmail.nossr50.vChat;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -11,6 +14,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
+import com.gmail.nossr50.vChat.listeners.playerListener;
 import com.gmail.nossr50.vChat.spout.vSpout;
 import com.gmail.nossr50.vChat.spout.runnables.UpdatePreviews;
 
@@ -19,8 +23,9 @@ public class vChat extends JavaPlugin
 	final playerListener pl = new playerListener(this);
 	public HashMap<Player, PlayerData> playerData = new HashMap<Player, PlayerData>();
 	
-	Boolean spoutEnabled = false;
+	public Boolean spoutEnabled = false;
 	vSpout spout = null;
+	String vChatDir = "plugins" + File.separator + "vChat";
 	
 	@Override
 	public void onDisable() {
@@ -46,6 +51,29 @@ public class vChat extends JavaPlugin
 			spout.initialize();
 		}
 		
+		for(Player x : Bukkit.getServer().getOnlinePlayers())
+		{
+			playerData.put(x, new PlayerData(x));
+		}
+		
 		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new UpdatePreviews(this), 0, 2);
+		
+		createFlatFiles();
+	}
+	
+	private void createFlatFiles()
+	{
+		new File(vChatDir).mkdir(); //Make directory
+		File users = new File(vChatDir+File.separator+"vChat.users");
+		if(!users.exists())
+		{
+			try {
+				FileWriter writer = new FileWriter(users);
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }

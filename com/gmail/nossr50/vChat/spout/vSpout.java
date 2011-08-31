@@ -9,6 +9,8 @@ import org.bukkit.plugin.PluginManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.gmail.nossr50.vChat.vChat;
+import com.gmail.nossr50.vChat.spout.listeners.inputListener;
+import com.gmail.nossr50.vChat.spout.listeners.screenListener;
 import com.gmail.nossr50.vChat.spout.screens.CustomizationScreen;
 
 public class vSpout 

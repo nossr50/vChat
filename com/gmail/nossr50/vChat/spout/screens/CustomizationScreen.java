@@ -260,7 +260,7 @@ public class CustomizationScreen extends GenericPopup
 		{
 			if(player.isOp() && nickNameField.getText().length() <= limit_nickname)
 			{
-				PD.setNickname(PD.getBuiltNickname());
+				PD.setNickname(PD.getBuiltNickname().replace(":", "."));
 				PD.clearBuiltNickname();
 				nickNameField.setText("").setDirty(true);
 			} else if (!player.isOp())
@@ -275,7 +275,7 @@ public class CustomizationScreen extends GenericPopup
 		{
 			if(prefixField.getText().length() <= limit_prefix)
 			{
-				PD.setPrefix(PD.getBuiltPrefix());
+				PD.setPrefix(PD.getBuiltPrefix().replace(":", "."));
 				PD.clearBuiltPrefix();
 				prefixField.setText("").setDirty(true);
 			} else if (prefixField.getText().length() > limit_prefix){
@@ -287,7 +287,7 @@ public class CustomizationScreen extends GenericPopup
 		{
 			if(suffixField.getText().length() <= limit_suffix)
 			{
-				PD.setSuffix(PD.getBuiltSuffix());
+				PD.setSuffix(PD.getBuiltSuffix().replace(":", "."));
 				PD.clearBuiltSuffix();
 				suffixField.setText("").setDirty(true);
 			} else if (suffixField.getText().length() <= limit_suffix){
