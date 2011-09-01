@@ -5,8 +5,9 @@ import org.bukkit.craftbukkit.TextWrapper;
 
 public class WordWrap extends TextWrapper
 {
-	//Most of the code shamelessly borrowed from CraftBukkit, this is the best way to implement a wordwrap 
-	//and unfortunately there was no way to grab these values through the Bukkit API as of the time of this writing
+	//The values regarding the length of the chat window and how big each character was is shamelessly borrowed from CraftBukkit
+	//Using their values they worked out is the best way to implement an accurate and robust wordwrap 
+	//And unfortunately there was no way to grab these values through the Bukkit API as of the time of this writing
 	//I only took values I needed to code a proper word wrap, wish I could've grabbed them from the API honestly
 	
 	private static final int[] characterWidths = new int[] {
@@ -27,6 +28,7 @@ public class WordWrap extends TextWrapper
         8, 7, 7, 8, 7, 8, 8, 8, 7, 8, 8, 7, 9, 9, 6, 7,
         7, 7, 7, 7, 9, 6, 7, 8, 7, 6, 6, 9, 7, 6, 7, 1
     };
+	
     private static final char COLOR_CHAR = '\u00A7';
     private static ChatColor lastcolor = ChatColor.WHITE;
     private static final String allowedChars = net.minecraft.server.FontAllowedCharacters.allowedCharacters;
@@ -71,6 +73,7 @@ public class WordWrap extends TextWrapper
 			
 			if(x == COLOR_CHAR && format.length() >= pos+2 && (ChatFormatter.isColorCode(String.valueOf(format.charAt(pos+1))) || format.charAt(pos+1) == COLOR_CHAR))
 			{
+				if(ChatFormatter.isColorCode(String.valueOf(format.charAt(pos+1))));
 				lastcolor = getColorCode(String.valueOf(format.charAt(pos+1)));
 				shouldSkip = true;
 				pos++;

@@ -42,12 +42,13 @@ public class PlayerData
 	private void addPlayer(Player player)
 	{
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(vChatUserFile)));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(vChatUserFile, true));
 			bw.append(player.getName()+":");
 			bw.append(""+":");
 			bw.append(player.getName()+":");
 			bw.append(""+":");
 			bw.append(""+":");
+			bw.newLine(); //New line for the next guy
 			bw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -2,6 +2,8 @@ package com.gmail.nossr50.vChat.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.command.ColouredConsoleSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,6 +29,9 @@ public class playerListener extends PlayerListener
 	
 	public void onPlayerChat(PlayerChatEvent event) 
 	{
+		if(event.isCancelled())
+			return;
+		
 		event.setCancelled(true);
 		
 		Player player = event.getPlayer();
@@ -40,8 +45,10 @@ public class playerListener extends PlayerListener
 			
 		if(msg.length() >= 1 && msg.startsWith(">"))
 			msg=ChatColor.GREEN+msg;
+		
 		if(msg.contains(ChatFormatter.getSpecialChar()));
 			msg = ChatFormatter.parseColors(msg);
+			
 		String formatted = "<" + player.getDisplayName() + ChatColor.WHITE + "> " + PD.getDefaultColor() + msg;
 		
 		//WordWrap
@@ -54,7 +61,12 @@ public class playerListener extends PlayerListener
 				x.sendMessage(y);
 			}
 		}
-		
+		//Log stuff
+		if(Bukkit.getServer() instanceof CraftServer)
+		{
+			final ColouredConsoleSender ccs = new ColouredConsoleSender((CraftServer)Bukkit.getServer());
+			ccs.sendMessage(formatted); //Colors, woot!
+		}
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) 

@@ -37,7 +37,7 @@ public class vChat extends JavaPlugin
 	{
 		PluginManager PM = Bukkit.getServer().getPluginManager();
 		
-		PM.registerEvent(Event.Type.PLAYER_CHAT, pl, Priority.Lowest, this);
+		PM.registerEvent(Event.Type.PLAYER_CHAT, pl, Priority.Monitor, this);
 		PM.registerEvent(Type.PLAYER_QUIT, pl, Priority.Normal, this);
 		PM.registerEvent(Type.PLAYER_JOIN, pl, Priority.Normal, this);
 		
