@@ -1,5 +1,6 @@
 package com.gmail.nossr50.vChat.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -11,10 +12,13 @@ import org.getspout.spoutapi.SpoutManager;
 import com.gmail.nossr50.vChat.vChat;
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
 import com.gmail.nossr50.vChat.spout.vSpout;
+import com.gmail.nossr50.vChat.util.ChatFormatter;
+import com.gmail.nossr50.vChat.util.WordWrap;
 
 public class playerListener extends PlayerListener
 {
 	vChat plugin = null;
+	String specialChar = "^";
 	
 	public playerListener(vChat pluginx)
 	{
@@ -23,19 +27,34 @@ public class playerListener extends PlayerListener
 	
 	public void onPlayerChat(PlayerChatEvent event) 
 	{
+		event.setCancelled(true);
+		
 		Player player = event.getPlayer();
 		PlayerData PD = plugin.playerData.get(player);
 		String msg = event.getMessage();
 		
-		if(PD != null)
+		Player[] recipients = Bukkit.getServer().getOnlinePlayers();
+		
+		//TODO: This should probably only happen when changes are made to display name
+		player.setDisplayName(PD.getPrefix()+ChatColor.WHITE+""+PD.getNickname()+ChatColor.WHITE+""+PD.getSuffix());
+			
+		if(msg.length() >= 1 && msg.startsWith(">"))
+			msg=ChatColor.GREEN+msg;
+		if(msg.contains(ChatFormatter.getSpecialChar()));
+			msg = ChatFormatter.parseColors(msg);
+		String formatted = "<" + player.getDisplayName() + ChatColor.WHITE + "> " + PD.getDefaultColor() + msg;
+		
+		//WordWrap
+		String wrapped[] = WordWrap.wordWrapText(formatted);
+		
+		for(Player x : recipients)
 		{
-			player.setDisplayName(PD.getPrefix()+ChatColor.WHITE+""+PD.getNickname()+ChatColor.WHITE+""+PD.getSuffix());
-			
-			if(msg.length() >= 1 && msg.startsWith(">"))
-				msg=ChatColor.GREEN+msg;
-			
-			event.setFormat("<" + player.getDisplayName() + ChatColor.WHITE + "> " + PD.getDefaultColor() + msg);
+			for(String y : wrapped)
+			{
+				x.sendMessage(y);
+			}
 		}
+		
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) 
@@ -44,6 +63,7 @@ public class playerListener extends PlayerListener
 		PlayerData PD = new PlayerData(player);
 		
 		plugin.playerData.put(player, PD);
+		player.setDisplayName(PD.getPrefix()+ChatColor.WHITE+""+PD.getNickname()+ChatColor.WHITE+""+PD.getSuffix());
 	}
 	
 	public void onPlayerQuit(PlayerQuitEvent event) 
@@ -58,6 +78,7 @@ public class playerListener extends PlayerListener
 				vSpout.playerScreens.remove(SpoutManager.getPlayer(player));
 		}
 	}
+	
 	
 	
 }
