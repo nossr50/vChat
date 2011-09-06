@@ -115,12 +115,11 @@ public class PlayerData
 				String split[] = line.split(":");
 				if(!split[0].equals(playerName))
 				{
-					writer.append(line).append("/r/n");
+					writer.append(line).append("\r\n");
 				} else {
 				String x = ":";
 				String replacement = playerName+x+prefix+x+nickname+x+suffix+x+defaultColor.name()+x;
-				writer.append(replacement+"\r\n");
-				System.out.println("Saving!");
+				writer.append(replacement).append("\r\n");
 				}
 			}
 			reader.close(); //Close

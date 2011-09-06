@@ -40,6 +40,7 @@ public class WordWrap extends TextWrapper
 		String builtString = "";
 		int currentSize = 0;
 		int pos = 0;
+		int maxWidth = 317;
 		
 		for(char x : format.toCharArray())
 		{
@@ -47,6 +48,15 @@ public class WordWrap extends TextWrapper
 			
 			if(x == space)
 			{
+				if(currentSize + getCharWidth(x) >= maxWidth)
+				{
+					//If the first char on the next line is a space we want to forget about the size of the built string so far
+					//since the MC vanilla wordwrap kicks in
+					currentSize-=getSize(builtString);
+					builtString = builtString.substring(0, builtString.length()-1); //Should stop the second line from starting with a space
+					//currentSize+=getCharWidth(x);
+					continue;
+				}
 				//lastKnownSpacePos=pos;
 				String charsUntilSpace = "";
 				int charPos = pos+1;
@@ -57,7 +67,7 @@ public class WordWrap extends TextWrapper
 					charPos++;
 				}
 				
-				if(getSize(charsUntilSpace)+currentSize > 320)
+				if(getSize(charsUntilSpace)+currentSize >= maxWidth)
 				{
 					currentSize-=getSize(builtString);
 					builtString+="\n"+lastcolor;
@@ -96,6 +106,19 @@ public class WordWrap extends TextWrapper
 		return builtString.split("\n");
 	}
 	
+	private static int getCharWidth(char x)
+	{
+		int index = allowedChars.indexOf(x);
+    	if (index == -1) {
+    		return 0;
+        } else {
+            // Sadly needed as the allowedChars string misses the first
+            index += 32;
+        }
+		
+    	return characterWidths[index];
+	}
+	
 	private static int getSize(String str)
 	{
 		boolean shouldSkip = false;
@@ -127,7 +150,8 @@ public class WordWrap extends TextWrapper
 	                index += 32;
 	            }
 				
-			currentSize+=characterWidths[index]; //Add size
+	        if(x != ' ')
+			 currentSize+=characterWidths[index]; //Add size
 			pos++;
 		}
 		return currentSize;
