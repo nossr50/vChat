@@ -9,7 +9,7 @@ public class ChatField extends GenericTextField
 	public ChatField(TextType typex)
 	{
 		type = typex;
-		this.setWidth(90);
+		this.setWidth(110);
 		this.setHeight(12);
 		
 		this.setDirty(true);

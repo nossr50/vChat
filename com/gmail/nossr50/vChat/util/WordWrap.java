@@ -40,7 +40,7 @@ public class WordWrap extends TextWrapper
 		String builtString = "";
 		int currentSize = 0;
 		int pos = 0;
-		int maxWidth = 317;
+		int maxWidth = 318;
 		
 		for(char x : format.toCharArray())
 		{
@@ -50,6 +50,7 @@ public class WordWrap extends TextWrapper
 			{
 				if(currentSize + getCharWidth(x) >= maxWidth)
 				{
+					System.out.println("Trigger 1");
 					//If the first char on the next line is a space we want to forget about the size of the built string so far
 					//since the MC vanilla wordwrap kicks in
 					currentSize-=getSize(builtString);
@@ -117,6 +118,18 @@ public class WordWrap extends TextWrapper
         }
 		
     	return characterWidths[index];
+	}
+	
+	public static int getStringSize(String str)
+	{
+		int size = 0;
+		
+		for(char x : str.toCharArray())
+		{
+			size+=getCharWidth(x);
+		}
+		
+		return size;
 	}
 	
 	private static int getSize(String str)

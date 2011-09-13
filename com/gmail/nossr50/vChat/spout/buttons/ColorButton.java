@@ -1,5 +1,6 @@
 package com.gmail.nossr50.vChat.spout.buttons;
 
+
 import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.GenericButton;
 
@@ -18,5 +19,11 @@ public class ColorButton extends GenericButton
 	public ChatColor getChatColor()
 	{
 		return selectedColor;
+	}
+	
+	public void reset()
+	{
+		this.setText(selectedColor+selectedColor.name());
+		this.setDirty(true);
 	}
 }

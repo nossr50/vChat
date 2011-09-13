@@ -4,12 +4,15 @@ import org.bukkit.ChatColor;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
 import org.getspout.spoutapi.event.screen.ScreenListener;
+import org.getspout.spoutapi.event.screen.ScreenOpenEvent;
 import org.getspout.spoutapi.event.screen.TextFieldChangeEvent;
 import org.getspout.spoutapi.gui.Button;
+import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.gmail.nossr50.vChat.vChat;
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
+import com.gmail.nossr50.vChat.datatypes.SpoutPlayerData;
 import com.gmail.nossr50.vChat.spout.vSpout;
 import com.gmail.nossr50.vChat.spout.buttons.ColorButton;
 import com.gmail.nossr50.vChat.spout.buttons.DefaultsButton;
@@ -62,6 +65,8 @@ public class screenListener extends ScreenListener
 			} else if (button instanceof ColorButton)
 			{
 				ColorButton cb = (ColorButton)event.getButton();
+				screen.changeColorButtonDisplay(cb);
+				screen.setColorButtonLastClicked(cb);
 				screen.setSelectedColor(cb.getChatColor());
 			} else if (button instanceof EasyColor)
 			{
@@ -107,6 +112,12 @@ public class screenListener extends ScreenListener
 			PD.clearBuiltStrings();
 			
 			vSpout.playerScreens.remove(event.getPlayer());
+		}
+		else if(event.getScreenType() == ScreenType.CHAT_SCREEN)
+		{
+			SpoutPlayerData SPD = vSpout.spoutPlayerData.get(event.getPlayer());
+			event.getPlayer().getMainScreen().removeWidget(SPD.getActiveChannelLabel());
+			event.getPlayer().getMainScreen().removeWidget(SPD.getChannelsLabel());
 		}
 	}
 	public void buildString(String str, ChatField cf, SpoutPlayer sPlayer, CustomizationScreen screen)
@@ -169,4 +180,16 @@ public class screenListener extends ScreenListener
 			sPlayer.getMainScreen().setDirty(true);
 		}
 	}
+	
+	public void onScreenOpen(final ScreenOpenEvent event) {
+		SpoutPlayer sPlayer = event.getPlayer();
+		
+		if(event.getScreenType() == ScreenType.CHAT_SCREEN)
+		{
+			SpoutPlayerData SPD = vSpout.spoutPlayerData.get(sPlayer);
+			sPlayer.getMainScreen().attachWidget(plugin, SPD.getActiveChannelLabel());
+			sPlayer.getMainScreen().attachWidget(plugin, SPD.getChannelsLabel());
+		}
+	}
+	
 }

@@ -11,6 +11,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.gui.TextField;
 
+import com.gmail.nossr50.vChat.vChat;
+import com.gmail.nossr50.vChat.spout.vSpout;
 import com.gmail.nossr50.vChat.spout.textfields.ChatField;
 import com.gmail.nossr50.vChat.spout.textfields.TextType;
 
@@ -19,12 +21,13 @@ public class PlayerData
 	String prefix, suffix, nickname, str_prefix, str_nickname, str_suffix, playerName;
 	
 	String vChatDir = "plugins" + File.separator + "vChat";
+	String activeChannel = "";
 	String vChatUserFile = vChatDir + File.separator + "vChat.users";
 	
 	ChatColor defaultColor = ChatColor.WHITE;
 	long lastTypedTime;
 	
-	public PlayerData(Player player)
+	public PlayerData(Player player, vChat plugin)
 	{
 		playerName = player.getName();
 		nickname = player.getDisplayName();
@@ -37,6 +40,14 @@ public class PlayerData
 		
 		if(!load(player))
 			addPlayer(player);
+		
+		//TODO: This is for testing purposes, going to make it functional later..
+		activeChannel = "Global";
+		
+		if(vChat.spoutEnabled)
+		{
+			vSpout.createSpoutPlayerData(player);
+		}
 	}
 	
 	private void addPlayer(Player player)
@@ -129,6 +140,16 @@ public class PlayerData
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public String getActiveChatChannel()
+	{
+		return activeChannel;
+	}
+	
+	public void setActiveChatChannel(String str)
+	{
+		activeChannel = str;
 	}
 	
 	public long getLastTypedTime()

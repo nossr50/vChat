@@ -12,6 +12,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.getspout.spoutapi.SpoutManager;
 
 import com.gmail.nossr50.vChat.vChat;
+import com.gmail.nossr50.vChat.channels.ChannelManager;
+import com.gmail.nossr50.vChat.channels.ChatChannel;
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
 import com.gmail.nossr50.vChat.spout.vSpout;
 import com.gmail.nossr50.vChat.util.ChatFormatter;
@@ -38,8 +40,6 @@ public class playerListener extends PlayerListener
 		PlayerData PD = plugin.playerData.get(player);
 		String msg = event.getMessage();
 		
-		Player[] recipients = Bukkit.getServer().getOnlinePlayers();
-		
 		//TODO: This should probably only happen when changes are made to display name
 		player.setDisplayName(PD.getPrefix()+ChatColor.WHITE+""+PD.getNickname()+ChatColor.WHITE+""+PD.getSuffix());
 			
@@ -49,30 +49,43 @@ public class playerListener extends PlayerListener
 		if(msg.contains(ChatFormatter.getSpecialChar()));
 			msg = ChatFormatter.parseColors(msg);
 			
-		String formatted = "<" + player.getDisplayName() + ChatColor.WHITE + "> " + PD.getDefaultColor() + msg;
 		
-		//WordWrap
-		String wrapped[] = WordWrap.wordWrapText(formatted);
-		
-		for(Player x : recipients)
+		String toLog = "";
+		//Chat Channel Stuff
+		for(ChatChannel cc : ChannelManager.chatChannels.values())
 		{
-			for(String y : wrapped)
+			if(cc.inChannel(player))
 			{
-				x.sendMessage(y);
+				//Get the format
+				String formatted = cc.getFormat(player, PD, msg);
+				toLog = formatted;
+				//WordWrap
+				String wrapped[] = WordWrap.wordWrapText(formatted);
+				
+				for(Player x : cc.getPlayers())
+				{
+					for(String y : wrapped)
+					{
+						x.sendMessage(y);
+					}
+				}
 			}
 		}
+		
 		//Log stuff
 		if(Bukkit.getServer() instanceof CraftServer)
 		{
 			final ColouredConsoleSender ccs = new ColouredConsoleSender((CraftServer)Bukkit.getServer());
-			ccs.sendMessage(formatted); //Colors, woot!
+			ccs.sendMessage(toLog); //Colors, woot!
 		}
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) 
 	{
 		Player player = event.getPlayer();
-		PlayerData PD = new PlayerData(player);
+		PlayerData PD = new PlayerData(player, plugin);
+		
+		ChannelManager.assignPlayersToChannels("Global", player);
 		
 		plugin.playerData.put(player, PD);
 		player.setDisplayName(PD.getPrefix()+ChatColor.WHITE+""+PD.getNickname()+ChatColor.WHITE+""+PD.getSuffix());
@@ -84,10 +97,12 @@ public class playerListener extends PlayerListener
 		if(plugin.playerData.containsKey(event.getPlayer()))
 			plugin.playerData.remove(player);
 		
-		if(plugin.spoutEnabled)
+		if(vChat.spoutEnabled)
 		{
 			if(vSpout.playerScreens.containsKey(SpoutManager.getPlayer(player)))
 				vSpout.playerScreens.remove(SpoutManager.getPlayer(player));
+			if(vSpout.spoutPlayerData.containsKey(SpoutManager.getPlayer(player)))
+				vSpout.spoutPlayerData.remove(SpoutManager.getPlayer(player));
 		}
 	}
 	
