@@ -3,28 +3,19 @@ package com.gmail.nossr50.vChat;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-
-import org.blockface.bukkitstats.CallHome;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.gmail.nossr50.vChat.channels.ChannelManager;
-import com.gmail.nossr50.vChat.datatypes.PlayerData;
-import com.gmail.nossr50.vChat.listeners.playerListener;
+import com.gmail.nossr50.vChat.listeners.PlayerListener;
 import com.gmail.nossr50.vChat.spout.vSpout;
 import com.gmail.nossr50.vChat.spout.runnables.UpdatePreviews;
+import com.gmail.nossr50.vChat.util.Users;
 
 public class vChat extends JavaPlugin
 {
-	final playerListener pl = new playerListener(this);
-	public HashMap<Player, PlayerData> playerData = new HashMap<Player, PlayerData>();
-	
 	public static Boolean spoutEnabled = false;
 	vSpout spout = null;
 	String vChatDir = "plugins" + File.separator + "vChat";
@@ -37,11 +28,12 @@ public class vChat extends JavaPlugin
 	@Override
 	public void onEnable() 
 	{
+	    //Setup variables
 		PluginManager PM = Bukkit.getServer().getPluginManager();
+		PlayerListener playerListener = new PlayerListener();
 		
-		PM.registerEvent(Event.Type.PLAYER_CHAT, pl, Priority.Monitor, this);
-		PM.registerEvent(Type.PLAYER_QUIT, pl, Priority.Normal, this);
-		PM.registerEvent(Type.PLAYER_JOIN, pl, Priority.Normal, this);
+		//Register Events
+		PM.registerEvents(playerListener, this);
 		
 		//Create default channels
 		ChannelManager.createDefaultChannels();
@@ -51,25 +43,15 @@ public class vChat extends JavaPlugin
 			spoutEnabled = true;
 		}
 		
-		//For Spout
-		if(spoutEnabled)
-		{
-			spout = new vSpout(this);
-			spout.initialize();
-		}
-		
 		//For reloading
 		for(Player x : Bukkit.getServer().getOnlinePlayers())
 		{
-			playerData.put(x, new PlayerData(x, this));
+			Users.addPlayerData(x);
 		}
 		
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new UpdatePreviews(this), 0, 2);
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new UpdatePreviews(this), 0, 2);
 		
 		createFlatFiles();
-		
-		//Usage tracking stuffs
-		CallHome.load(this);
 	}
 	
 	private void createFlatFiles()

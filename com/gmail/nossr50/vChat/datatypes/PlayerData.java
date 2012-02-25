@@ -27,7 +27,7 @@ public class PlayerData
 	ChatColor defaultColor = ChatColor.WHITE;
 	long lastTypedTime;
 	
-	public PlayerData(Player player, vChat plugin)
+	public PlayerData(Player player)
 	{
 		playerName = player.getName();
 		nickname = player.getDisplayName();

@@ -5,6 +5,7 @@ import com.gmail.nossr50.vChat.vChat;
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
 import com.gmail.nossr50.vChat.spout.vSpout;
 import com.gmail.nossr50.vChat.spout.screens.CustomizationScreen;
+import com.gmail.nossr50.vChat.util.Users;
 
 public class UpdatePreviews implements Runnable {
 
@@ -22,7 +23,7 @@ public class UpdatePreviews implements Runnable {
 			if(sPlayer.isSpoutCraftEnabled() && sPlayer.getMainScreen().getActivePopup() != null && sPlayer.getMainScreen().getActivePopup() instanceof CustomizationScreen)
 			{
 				CustomizationScreen screen = (CustomizationScreen)sPlayer.getMainScreen().getActivePopup();
-				PlayerData PD = plugin.playerData.get(sPlayer);
+				PlayerData PD = Users.getPlayerData(sPlayer);
 				
 				if(!screen.hasPreviewLabelUpdated() && System.currentTimeMillis() - 500 >= PD.getLastTypedTime())
 				{

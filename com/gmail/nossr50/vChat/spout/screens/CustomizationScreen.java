@@ -21,7 +21,7 @@ import com.gmail.nossr50.vChat.spout.buttons.SetButton;
 import com.gmail.nossr50.vChat.spout.buttons.TextColorButton;
 import com.gmail.nossr50.vChat.spout.textfields.ChatField;
 import com.gmail.nossr50.vChat.spout.textfields.TextType;
-import com.gmail.nossr50.vChat.util.WordWrap;
+import com.gmail.nossr50.vChat.util.Users;
 
 public class CustomizationScreen extends GenericPopup
 {
@@ -282,7 +282,7 @@ public class CustomizationScreen extends GenericPopup
 	public void updatePlayerData(Player player)
 	{
 		String format = ChatColor.GOLD+"[vChat] "+ChatColor.RED;
-		PlayerData PD = plugin.playerData.get(player);
+		PlayerData PD = Users.getPlayerData(player);
 		
 		if(PD.getBuiltNickname().length() >= 3 )
 		{

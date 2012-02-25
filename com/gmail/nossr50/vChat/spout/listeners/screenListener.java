@@ -1,9 +1,9 @@
 package com.gmail.nossr50.vChat.spout.listeners;
 
 import org.bukkit.ChatColor;
+import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
-import org.getspout.spoutapi.event.screen.ScreenListener;
 import org.getspout.spoutapi.event.screen.ScreenOpenEvent;
 import org.getspout.spoutapi.event.screen.TextFieldChangeEvent;
 import org.getspout.spoutapi.gui.Button;
@@ -25,8 +25,9 @@ import com.gmail.nossr50.vChat.spout.screens.CustomizationScreen;
 import com.gmail.nossr50.vChat.spout.textfields.ChatField;
 import com.gmail.nossr50.vChat.spout.textfields.TextType;
 import com.gmail.nossr50.vChat.util.Misc;
+import com.gmail.nossr50.vChat.util.Users;
 
-public class screenListener extends ScreenListener
+public class screenListener implements Listener
 {
 	vChat plugin = null;
 	public screenListener(vChat pluginx) {
@@ -36,7 +37,7 @@ public class screenListener extends ScreenListener
 	public void onButtonClick(ButtonClickEvent event) 
 	{
 		SpoutPlayer sPlayer = event.getPlayer();
-		PlayerData PD = plugin.playerData.get(sPlayer);
+		PlayerData PD = Users.getPlayerData(sPlayer);
 		String format = ChatColor.GOLD+"[vChat] "+ChatColor.GREEN;
 		
 		if(vSpout.playerScreens.get(sPlayer) != null)
@@ -104,11 +105,12 @@ public class screenListener extends ScreenListener
 			}
 		}
 	}
+	
 	public void onScreenClose(ScreenCloseEvent event) 
 	{
 		if(event.getScreen() instanceof CustomizationScreen)
 		{
-			PlayerData PD = plugin.playerData.get(event.getPlayer());
+			PlayerData PD = Users.getPlayerData(event.getPlayer());
 			PD.clearBuiltStrings();
 			
 			vSpout.playerScreens.remove(event.getPlayer());
@@ -120,9 +122,10 @@ public class screenListener extends ScreenListener
 			event.getPlayer().getMainScreen().removeWidget(SPD.getChannelsLabel());
 		}
 	}
+	
 	public void buildString(String str, ChatField cf, SpoutPlayer sPlayer, CustomizationScreen screen)
 	{
-		PlayerData PD = plugin.playerData.get(sPlayer);
+		PlayerData PD = Users.getPlayerData(sPlayer);
 		switch(cf.getTextType())
 		{
 		case PREFIX:
@@ -142,6 +145,7 @@ public class screenListener extends ScreenListener
 		break;
 		}
 	}
+	
 	public void onTextFieldChange(TextFieldChangeEvent event) 
 	{
 		SpoutPlayer sPlayer = event.getPlayer();
@@ -150,7 +154,7 @@ public class screenListener extends ScreenListener
 		{
 			ChatField cf = (ChatField) event.getTextField();
 			CustomizationScreen screen = vSpout.playerScreens.get(sPlayer);
-			PlayerData PD = plugin.playerData.get(sPlayer);
+			PlayerData PD = Users.getPlayerData(sPlayer);
 			
 			if(event.getNewText().length() > event.getOldText().length())
 			{

@@ -1,6 +1,6 @@
 package com.gmail.nossr50.vChat.spout;
 
-import org.getspout.spoutapi.event.input.InputListener;
+import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.Keyboard;
@@ -9,8 +9,9 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import com.gmail.nossr50.vChat.vChat;
 import com.gmail.nossr50.vChat.datatypes.PlayerData;
 import com.gmail.nossr50.vChat.spout.screens.CustomizationScreen;
+import com.gmail.nossr50.vChat.util.Users;
 
-public class inputListener extends InputListener
+public class inputListener implements Listener
 {
 	vChat plugin = null;
 	
@@ -28,15 +29,12 @@ public class inputListener extends InputListener
 		
 		if(sPlayer.isSpoutCraftEnabled() && event.getKey() == Keyboard.KEY_C)
 		{
-			if(plugin.playerData.containsKey(sPlayer))
-			{
-				PlayerData PD = plugin.playerData.get(sPlayer);
-				CustomizationScreen screen = new CustomizationScreen(PD, plugin);
+			PlayerData PD = Users.getPlayerData(sPlayer);
+			CustomizationScreen screen = new CustomizationScreen(PD, plugin);
 				
-				vSpout.playerScreens.put(sPlayer, screen);
-				sPlayer.getMainScreen().attachPopupScreen(vSpout.playerScreens.get(sPlayer));
-				sPlayer.getMainScreen().setDirty(true);
-			}
+			vSpout.playerScreens.put(sPlayer, screen);
+			sPlayer.getMainScreen().attachPopupScreen(vSpout.playerScreens.get(sPlayer));
+			sPlayer.getMainScreen().setDirty(true);
 		}
 	}
 }
