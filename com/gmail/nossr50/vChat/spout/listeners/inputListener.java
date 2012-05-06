@@ -1,5 +1,6 @@
 package com.gmail.nossr50.vChat.spout.listeners;
 
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
 import org.getspout.spoutapi.gui.ScreenType;
@@ -12,15 +13,16 @@ import com.gmail.nossr50.vChat.spout.vSpout;
 import com.gmail.nossr50.vChat.spout.screens.CustomizationScreen;
 import com.gmail.nossr50.vChat.util.Users;
 
-public class inputListener implements Listener
+public class InputListener implements Listener
 {
 	vChat plugin = null;
 	
-	public inputListener(vChat pluginx)
+	public InputListener(vChat pluginx)
 	{
 		plugin = pluginx;
 	}
 	
+	@EventHandler(ignoreCancelled = true)
 	public void onKeyPressedEvent(KeyPressedEvent event) 
 	{
 		if(event.getScreenType() != ScreenType.GAME_SCREEN)

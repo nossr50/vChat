@@ -275,21 +275,41 @@ public class PlayerData
 		{
 		case PREFIX:
 		{
-			str_prefix = str_prefix.substring(start, maxsize);
+		    System.out.println(str_prefix.length());
+			str_prefix = trimString(str_prefix);
+			System.out.println(str_prefix.length());
 		}
 		break;
 		case NICKNAME:
 		{
-			str_nickname = str_nickname.substring(start, maxsize);
+			str_nickname = trimString(str_nickname);
 		}
 		break;
 		case SUFFIX:
 		{
-			str_suffix = str_suffix.substring(start, maxsize);
+			str_suffix = trimString(str_suffix);
 		}
 		break;
 		}
 	}
+	
+	public String trimString(String string) {
+	    String newString = "";
+	    char COLOR_CHAR = '\u00A7';
+	    int pos = 0;
+	    for(char x : string.toCharArray()) {
+	        System.out.println("Char: "+x);
+	        if(x == COLOR_CHAR && pos+2 == string.toCharArray().length) {
+	            break;
+	        } else if (pos+1 == string.toCharArray().length)
+	            break;
+	        
+	        newString+=x;
+	        pos++;
+	    }
+	    return newString;
+	}
+	
 	public int getBuiltStringSize(TextType type)
 	{
 		switch(type)

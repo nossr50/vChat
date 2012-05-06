@@ -1,6 +1,7 @@
 package com.gmail.nossr50.vChat.spout.listeners;
 
 import org.bukkit.ChatColor;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
@@ -27,13 +28,14 @@ import com.gmail.nossr50.vChat.spout.textfields.TextType;
 import com.gmail.nossr50.vChat.util.Misc;
 import com.gmail.nossr50.vChat.util.Users;
 
-public class screenListener implements Listener
+public class ScreenListener implements Listener
 {
 	vChat plugin = null;
-	public screenListener(vChat pluginx) {
+	public ScreenListener(vChat pluginx) {
 		plugin = pluginx;
 	}
 	
+	@EventHandler(ignoreCancelled = true)
 	public void onButtonClick(ButtonClickEvent event) 
 	{
 		SpoutPlayer sPlayer = event.getPlayer();
@@ -106,6 +108,7 @@ public class screenListener implements Listener
 		}
 	}
 	
+	@EventHandler(ignoreCancelled = true)
 	public void onScreenClose(ScreenCloseEvent event) 
 	{
 		if(event.getScreen() instanceof CustomizationScreen)
@@ -146,6 +149,7 @@ public class screenListener implements Listener
 		}
 	}
 	
+	@EventHandler(ignoreCancelled = true)
 	public void onTextFieldChange(TextFieldChangeEvent event) 
 	{
 		SpoutPlayer sPlayer = event.getPlayer();
@@ -185,6 +189,7 @@ public class screenListener implements Listener
 		}
 	}
 	
+	@EventHandler(ignoreCancelled = true)
 	public void onScreenOpen(final ScreenOpenEvent event) {
 		SpoutPlayer sPlayer = event.getPlayer();
 		

@@ -22,6 +22,7 @@ import com.gmail.nossr50.vChat.spout.buttons.TextColorButton;
 import com.gmail.nossr50.vChat.spout.textfields.ChatField;
 import com.gmail.nossr50.vChat.spout.textfields.TextType;
 import com.gmail.nossr50.vChat.util.Users;
+import com.gmail.nossr50.vChat.util.WordWrap;
 
 public class CustomizationScreen extends GenericPopup
 {
@@ -78,6 +79,8 @@ public class CustomizationScreen extends GenericPopup
 		
 		for(ChatColor x : ChatColor.values())
 		{
+		    if(x.equals(ChatColor.ITALIC) || x.equals(ChatColor.RESET) || x.equals(ChatColor.STRIKETHROUGH) || x.equals(ChatColor.BOLD) || x.equals(ChatColor.MAGIC) || x.equals(ChatColor.UNDERLINE))
+		        continue;
 			ColorButton y = new ColorButton(x);
 			y.setDirty(true);
 			colorButtons.add(y);
@@ -136,7 +139,6 @@ public class CustomizationScreen extends GenericPopup
 		label_totalsize_prefix.setText(ChatColor.GRAY+"0/"+limit_prefix).setPriority(RenderPriority.Lowest).setDirty(true);
 		label_totalsize_prefix.setX((prefixField.getX()+prefixField.getWidth())-WordWrap.getStringSize(label_totalsize_prefix.getText())-1).setY(prefixField.getY()+2).setDirty(true);
 		
-		
 		//suffix = right
 		suffixField.setX(nickNameField.getX()+nickNameField.getWidth()+default_suffix.getWidth()+spacing).setY(center_y/2).setDirty(true);
 		label_preview_suffix.setX(suffixField.getX()+3).setY(suffixField.getY()+suffixField.getHeight()+(spacing/2)).setDirty(true);
@@ -145,7 +147,6 @@ public class CustomizationScreen extends GenericPopup
 		default_suffix.setX(suffixField.getX()-default_suffix.getWidth()-3).setY(center_y/2-default_suffix.getHeight()-small_spacing).setDirty(true);
 		label_totalsize_suffix.setText(ChatColor.GRAY+"0/"+limit_suffix).setPriority(RenderPriority.Lowest).setDirty(true);
 		label_totalsize_suffix.setX((suffixField.getX()+suffixField.getWidth())-WordWrap.getStringSize(label_totalsize_suffix.getText())-1).setY(suffixField.getY()+2).setDirty(true);
-		
 		
 		setButton.setX(center_x-(setButton.getWidth()/2)).setY(nickNameField.getY()+spacing+setButton.getHeight()).setDirty(true);		
 		escapeButton.setX(setButton.getX()+escapeButton.getWidth()).setY(setButton.getY()).setDirty(true);

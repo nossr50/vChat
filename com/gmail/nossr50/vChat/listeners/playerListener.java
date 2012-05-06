@@ -17,6 +17,7 @@ import com.gmail.nossr50.vChat.datatypes.PlayerData;
 import com.gmail.nossr50.vChat.spout.vSpout;
 import com.gmail.nossr50.vChat.util.ChatFormatter;
 import com.gmail.nossr50.vChat.util.Users;
+import com.gmail.nossr50.vChat.util.WordWrap;
 
 public class PlayerListener implements Listener
 {
@@ -55,9 +56,8 @@ public class PlayerListener implements Listener
                 
                 //WordWrap
                 
-                //String wrapped[] = WordWrap.wordWrapText(formatted);
+                String wrapped[] = WordWrap.wordWrapText(formatted);
                 
-                /*
                 for(Player x : cc.getPlayers())
                 {
                     for(String y : wrapped)
@@ -65,7 +65,7 @@ public class PlayerListener implements Listener
                         x.sendMessage(y);
                     }
                 }
-                */
+                
             }
         }
         

@@ -11,6 +11,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.gmail.nossr50.vChat.channels.ChannelManager;
 import com.gmail.nossr50.vChat.listeners.PlayerListener;
 import com.gmail.nossr50.vChat.spout.vSpout;
+import com.gmail.nossr50.vChat.spout.listeners.InputListener;
+import com.gmail.nossr50.vChat.spout.listeners.ScreenListener;
 import com.gmail.nossr50.vChat.spout.runnables.UpdatePreviews;
 import com.gmail.nossr50.vChat.util.Users;
 
@@ -41,6 +43,8 @@ public class vChat extends JavaPlugin
 		if(PM.getPlugin("Spout") != null)
 		{
 			spoutEnabled = true;
+			PM.registerEvents(new InputListener(this), this);
+			PM.registerEvents(new ScreenListener(this), this);
 		}
 		
 		//For reloading
