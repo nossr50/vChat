@@ -114,11 +114,11 @@ public class PlayerData
 
 		if(Bukkit.getServer().getPluginManager().getPlugin("PermissionsEx") != null) {
 			if(prefix.equals("")) {
-				prefix = PermissionsEx.getPermissionManager().getUser(player).getPrefix() + " ";
+				prefix = (PermissionsEx.getPermissionManager().getUser(player).getPrefix() + " ").replaceAll("&([a-z0-9])", "\u00A7$1");
 				pexPrefix = true;
 			}
 			if(suffix.equals("")) {
-				suffix = PermissionsEx.getPermissionManager().getUser(player).getSuffix();
+				suffix = PermissionsEx.getPermissionManager().getUser(player).getSuffix().replaceAll("&([a-z0-9])", "\u00A7$1");
 				pexSuffix = true;
 			}
 			return true;
