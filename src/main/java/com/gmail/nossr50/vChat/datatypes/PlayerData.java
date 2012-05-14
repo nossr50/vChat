@@ -22,6 +22,8 @@ import com.gmail.nossr50.vChat.spout.textfields.TextType;
 public class PlayerData 
 {
 	String prefix, suffix, nickname, str_prefix, str_nickname, str_suffix, playerName;
+
+	boolean pexPrefix, pexSuffix;
 	
 	String vChatDir = "plugins" + File.separator + "vChat";
 	String activeChannel = "";
@@ -113,9 +115,11 @@ public class PlayerData
 		if(Bukkit.getServer().getPluginManager().getPlugin("PermissionsEx") != null) {
 			if(prefix.equals("")) {
 				prefix = PermissionsEx.getPermissionManager().getUser(player).getPrefix() + " ";
+				pexPrefix = true;
 			}
 			if(suffix.equals("")) {
 				suffix = PermissionsEx.getPermissionManager().getUser(player).getSuffix();
+				pexSuffix = true;
 			}
 			return true;
 		} else {
@@ -142,6 +146,8 @@ public class PlayerData
 					writer.append(line).append("\r\n");
 				} else {
 				String x = ":";
+				prefix = (pexPrefix) ? "" : prefix;
+				suffix = (pexSuffix) ? "" : suffix;
 				String replacement = playerName+x+prefix+x+nickname+x+suffix+x+defaultColor.name()+x;
 				writer.append(replacement).append("\r\n");
 				}
