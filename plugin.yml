@@ -1,4 +1,0 @@
-name: vChat
-version: Alpha
-main: com.gmail.nossr50.vChat.vChat
-softdepend: [Spout]

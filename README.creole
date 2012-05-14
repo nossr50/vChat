@@ -1,0 +1,18 @@
+== vChat
+
+vChat description goes here
+
+=== Commands
+
+* /some commands
+
+=== Permissions
+
+* some.permission
+** //Some permission description//
+
+All permissions default to **op**
+
+=== Compiling
+
+Maven 3 is required to compile vChat
