@@ -1,4 +1,4 @@
 name: ${project.name}
 version: ${project.version}
 main: com.gmail.nossr50.vChat.vChat
-softdepend: [Spout]
+softdepend: [Spout, PermissionsEx]

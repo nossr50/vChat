@@ -7,9 +7,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.gui.TextField;
+
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import com.gmail.nossr50.vChat.vChat;
 import com.gmail.nossr50.vChat.spout.vSpout;
@@ -100,14 +103,24 @@ public class PlayerData
 						}
 					}
 				reader.close(); //Close
-				return true;
 			}
-			return false;
 			
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
-		return false;
+
+		if(Bukkit.getServer().getPluginManager().getPlugin("PermissionsEx") != null) {
+			if(prefix.equals("")) {
+				prefix = PermissionsEx.getPermissionManager().getUser(player).getPrefix() + " ";
+			}
+			if(suffix.equals("")) {
+				suffix = PermissionsEx.getPermissionManager().getUser(player).getSuffix();
+			}
+			return true;
+		} else {
+			return true;
+		}
 	}
 	
 	public void save()
